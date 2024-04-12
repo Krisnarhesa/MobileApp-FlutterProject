@@ -36,11 +36,11 @@ class _WelcomePageState extends State<WelcomePage> {
                       height: 20,
                     ),
                     Text(
-                      "Description of the Welcome Page",
+                      "Progmob App, my first project application that I've developed with utmost dedication",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.grey[700],
-                        fontSize: 15,
+                        fontSize: 13,
                       ),
                     )
                   ],

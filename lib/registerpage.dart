@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:progmob_app/homepage.dart';
 import 'package:progmob_app/loginpage.dart';
 
@@ -33,13 +34,6 @@ class _RegisterPageState extends State<RegisterPage> {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
-  }
-
-  void _navigateToLoginPage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
-    );
   }
 
   void _register() {
@@ -111,6 +105,17 @@ class _RegisterPageState extends State<RegisterPage> {
                     TextField(
                       decoration: InputDecoration(
                         labelText: "Username",
+                        hintText: "Enter your username",
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14.0,
+                        ),
+                        labelStyle: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400),
+                        prefixIcon: Icon(Icons.person,
+                            color: Colors.blue.shade400, size: 20),
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                         border: OutlineInputBorder(
@@ -118,11 +123,22 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 15),
                     TextField(
                       controller: _emailController,
                       decoration: InputDecoration(
                         labelText: "Email",
+                        hintText: "Example@gmail.com",
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14.0,
+                        ),
+                        labelStyle: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400),
+                        prefixIcon: Icon(Icons.email,
+                            color: Colors.blue.shade400, size: 20),
                         errorText:
                             _isEmailValid ? "Please enter a valid email" : null,
                         contentPadding:
@@ -132,11 +148,22 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 15),
                     TextField(
                       controller: _passwordController,
                       decoration: InputDecoration(
                         labelText: "Password",
+                        hintText: "Enter your password",
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14.0,
+                        ),
+                        labelStyle: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400),
+                        prefixIcon: Icon(Icons.key,
+                            color: Colors.blue.shade400, size: 20),
                         errorText:
                             _isPasswordValid ? "Passwords do not match" : null,
                         contentPadding:
@@ -160,11 +187,22 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       obscureText: !_isPasswordVisible,
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 15),
                     TextField(
                       controller: _confirmPasswordController,
                       decoration: InputDecoration(
                         labelText: "Confirm Password",
+                        hintText: "Re-enter your password",
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14.0,
+                        ),
+                        labelStyle: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400),
+                        prefixIcon: Icon(Icons.key,
+                            color: Colors.blue.shade400, size: 20),
                         errorText:
                             _isPasswordValid ? "Passwords do not match" : null,
                         contentPadding:
@@ -216,11 +254,153 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
                 Row(
+                  children: [
+                    Expanded(
+                        child: Container(
+                      width: double.maxFinite,
+                      height: 1,
+                      color: Colors.blue.shade400,
+                    )),
+                    Text(
+                      "  OR  ",
+                      style: TextStyle(
+                        color: Colors.blue.shade400,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        width: double.maxFinite,
+                        height: 1,
+                        color: Colors.blue.shade400,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                        );
+                      },
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                            color: Colors.grey.withOpacity(0.5),
+                            width: 1,
+                          ),
+                        ),
+                        child: Image(
+                          image: AssetImage("assets/google.png"),
+                          width: 30,
+                          height: 30,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    GestureDetector(
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                            color: Colors.grey.withOpacity(0.5),
+                            width: 1,
+                          ),
+                        ),
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage()),
+                            );
+                          },
+                          icon: FaIcon(FontAwesomeIcons.facebook),
+                          iconSize: 30,
+                          color: Colors.blue.shade800,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    GestureDetector(
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                            color: Colors.grey.withOpacity(0.5),
+                            width: 1,
+                          ),
+                        ),
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage()),
+                            );
+                          },
+                          icon: FaIcon(FontAwesomeIcons.github),
+                          iconSize: 30,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                        );
+                      },
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                            color: Colors.grey.withOpacity(0.5),
+                            width: 1,
+                          ),
+                        ),
+                        child: Image(
+                          image: AssetImage("assets/twitter.png"),
+                          width: 30,
+                          height: 30,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 50),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text("Already have an account? "),
                     InkWell(
-                      onTap: _navigateToLoginPage,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginPage()),
+                        );
+                      },
                       child: Text(
                         "Login",
                         style: TextStyle(

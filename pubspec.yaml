@@ -1,12 +1,13 @@
 name: progmob_app
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: '>=3.3.1 <4.0.0'
+  sdk: ">=3.3.1 <4.0.0"
 
 dependencies:
+  font_awesome_flutter: ">= 4.7.0"
   flutter:
     sdk: flutter
 
@@ -20,3 +21,5 @@ flutter:
   assets:
     - assets/welcome.png
     - assets/Login.png
+    - assets/google.png
+    - assets/twitter.png

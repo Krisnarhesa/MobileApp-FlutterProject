@@ -31,13 +31,6 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _navigateToRegisterPage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => RegisterPage()),
-    );
-  }
-
   void _login() {
     // Validate email and password
     if (!_emailController.text.contains("@gmail.com") ||
@@ -104,42 +97,85 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       children: <Widget>[
                         TextField(
+                          cursorColor: Colors.black,
                           controller: _emailController,
                           decoration: InputDecoration(
                             labelText: "Email",
+                            hintText: 'Example@gmail.com',
+                            labelStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400),
+                            hintStyle: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14.0,
+                            ),
+                            prefixIcon: Icon(Icons.email,
+                                color: Colors.blue.shade400, size: 20),
                             errorText: _isEmailValid
                                 ? "Please enter a valid email"
                                 : null,
                             contentPadding: EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 10),
                             enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey.shade400),
+                              borderSide: BorderSide(
+                                  color: Colors.grey.shade200, width: 2),
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
                             border: OutlineInputBorder(
                                 borderSide:
                                     BorderSide(color: Colors.grey.shade400)),
+                            floatingLabelStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18.0,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: 1.5),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
                           ),
                           keyboardType: TextInputType.emailAddress,
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 15),
                         TextField(
                           controller: _passwordController,
                           obscureText: !_isPasswordVisible,
                           decoration: InputDecoration(
                             labelText: "Password",
+                            hintText: 'Password',
+                            labelStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400),
+                            hintStyle: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14.0,
+                            ),
+                            prefixIcon: Icon(Icons.key,
+                                color: Colors.blue.shade400, size: 20),
                             errorText: _isPasswordValid
                                 ? "Password is required"
                                 : null,
                             contentPadding: EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 10),
                             enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey.shade400),
+                              borderSide: BorderSide(
+                                  color: Colors.grey.shade200, width: 2),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            floatingLabelStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18.0,
                             ),
                             border: OutlineInputBorder(
                                 borderSide:
                                     BorderSide(color: Colors.grey.shade400)),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: 1.5),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
                             suffixIcon: GestureDetector(
                               onTap: () {
                                 setState(() {
@@ -154,6 +190,21 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              onPressed: () {},
+                              child: Text(
+                                'Forgot Your Password?',
+                                style: TextStyle(
+                                    color: Colors.blue.shade400,
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            )
+                          ],
                         ),
                       ],
                     ),
@@ -186,22 +237,26 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text("Don't have an account?"),
-                        InkWell(
-                      onTap: _navigateToRegisterPage,
-                      child: Text(
-                          " Sign up",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                            color: Color.fromARGB(255, 42, 165, 226),
-                          ),
-                        )
-                      ),
-                      ],
-                    ),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text("Don't have an account?"),
+                      InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RegisterPage()));
+                          },
+                          child: Text(
+                            " Sign up",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 42, 165, 226),
+                            ),
+                          )),
+                    ],
+                  ),
                   Container(
                     padding: EdgeInsets.only(top: 100),
                     height: 200,
