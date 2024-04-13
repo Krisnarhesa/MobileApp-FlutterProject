@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:progmob_app/forgotpasswordpage.dart';
 import 'package:progmob_app/homepage.dart';
 import 'package:progmob_app/registerpage.dart';
 
@@ -40,7 +41,6 @@ class _LoginPageState extends State<LoginPage> {
         _isPasswordValid = true;
       });
     } else {
-      // Perform login authentication here
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => HomePage()));
     }
@@ -115,6 +115,9 @@ class _LoginPageState extends State<LoginPage> {
                             errorText: _isEmailValid
                                 ? "Please enter a valid email"
                                 : null,
+                            errorStyle: TextStyle(
+                              fontSize: 12.0,
+                            ),
                             contentPadding: EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 10),
                             enabledBorder: OutlineInputBorder(
@@ -157,6 +160,9 @@ class _LoginPageState extends State<LoginPage> {
                             errorText: _isPasswordValid
                                 ? "Password is required"
                                 : null,
+                            errorStyle: TextStyle(
+                              fontSize: 12.0,
+                            ),
                             contentPadding: EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 10),
                             enabledBorder: OutlineInputBorder(
@@ -195,7 +201,13 @@ class _LoginPageState extends State<LoginPage> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ForgotPasswordPage()));
+                              },
                               child: Text(
                                 'Forgot Your Password?',
                                 style: TextStyle(
@@ -236,6 +248,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[

@@ -1,15 +1,41 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:progmob_app/loginpage.dart';
 import 'package:progmob_app/registerpage.dart';
 
 class WelcomePage extends StatefulWidget {
-  const WelcomePage({super.key});
+  const WelcomePage({Key? key}) : super(key: key);
 
   @override
   State<WelcomePage> createState() => _WelcomePageState();
 }
 
 class _WelcomePageState extends State<WelcomePage> {
+  int _currentPageIndex = 0;
+  List<String> _imagePaths = [
+    "assets/welcome1.png",
+    "assets/welcome.png",
+    "assets/welcome2.png",
+    "assets/welcome3.png",
+  ];
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(Duration(seconds: 3), (timer) {
+      setState(() {
+        _currentPageIndex = (_currentPageIndex + 1) % _imagePaths.length;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,11 +74,22 @@ class _WelcomePageState extends State<WelcomePage> {
                 Container(
                   height: MediaQuery.of(context).size.height / 2,
                   width: double.infinity,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/welcome.png"),
-                      fit: BoxFit.cover,
-                    ),
+                  child: Stack(
+                    children: _imagePaths
+                        .map(
+                          (path) => AnimatedOpacity(
+                            opacity:
+                                _imagePaths.indexOf(path) == _currentPageIndex
+                                    ? 1.0
+                                    : 0.0,
+                            duration: Duration(seconds: 1),
+                            child: Image.asset(
+                              path,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        )
+                        .toList(),
                   ),
                 ),
                 Column(

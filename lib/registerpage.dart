@@ -100,6 +100,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     )
                   ],
                 ),
+                SizedBox(height: 10),
                 Column(
                   children: <Widget>[
                     TextField(
@@ -141,6 +142,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             color: Colors.blue.shade400, size: 20),
                         errorText:
                             _isEmailValid ? "Please enter a valid email" : null,
+                        errorStyle: TextStyle(
+                          fontSize: 12.0,
+                        ),
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                         border: OutlineInputBorder(
@@ -166,6 +170,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             color: Colors.blue.shade400, size: 20),
                         errorText:
                             _isPasswordValid ? "Passwords do not match" : null,
+                        errorStyle: TextStyle(
+                          fontSize: 12.0,
+                        ),
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                         border: OutlineInputBorder(
@@ -205,6 +212,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             color: Colors.blue.shade400, size: 20),
                         errorText:
                             _isPasswordValid ? "Passwords do not match" : null,
+                        errorStyle: TextStyle(
+                          fontSize: 12.0,
+                        ),
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                         border: OutlineInputBorder(
@@ -229,6 +239,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ],
                 ),
+                SizedBox(height: 10),
                 InkWell(
                   borderRadius: BorderRadius.circular(50),
                   onTap: _register,
@@ -253,6 +264,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                 ),
+                SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(
@@ -389,7 +401,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 50),
+                SizedBox(height: 25),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
