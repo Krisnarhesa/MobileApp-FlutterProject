@@ -4,7 +4,7 @@ import 'package:progmob_app/loginpage.dart';
 import 'package:progmob_app/registerpage.dart';
 
 class WelcomePage extends StatefulWidget {
-  const WelcomePage({Key? key}) : super(key: key);
+  const WelcomePage({super.key});
 
   @override
   State<WelcomePage> createState() => _WelcomePageState();

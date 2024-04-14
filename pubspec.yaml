@@ -15,6 +15,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  flutter_svg: ^0.22.0
 
 flutter:
   uses-material-design: true
@@ -27,3 +28,12 @@ flutter:
     - assets/welcome1.png
     - assets/welcome2.png
     - assets/welcome3.png
+    - assets/avatar.jpg
+    - assets/icons/gofood.svg
+    - assets/icons/goride.svg
+    - assets/icons/gosend.svg
+    - assets/icons/gocar.svg
+    - assets/icons/goclub.svg
+    - assets/icons/gomart.svg
+    - assets/icons/gopulsa.svg
+    - assets/icons/other.svg

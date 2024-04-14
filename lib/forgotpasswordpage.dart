@@ -94,29 +94,35 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Builder(
-                        builder: (BuildContext context) {
-                          return MaterialButton(
-                            color: Color(0xff0095FF),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            onPressed: () {
-                              _showNotification(context);
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.all(15.0),
-                              child: Text(
-                                "Send Code",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 18,
-                                  color: Colors.white,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.black),
+                        ),
+                        child: Builder(
+                          builder: (BuildContext context) {
+                            return MaterialButton(
+                              color: Color(0xff0095FF),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              onPressed: () {
+                                _showNotification(context);
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.all(15.0),
+                                child: Text(
+                                  "Send Code",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ],
