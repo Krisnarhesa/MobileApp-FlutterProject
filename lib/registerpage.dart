@@ -1,8 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:progmob_app/homepage.dart';
-import 'package:progmob_app/loginpage.dart';
+import 'package:get_storage/get_storage.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -12,6 +12,11 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final _storage = GetStorage();
+  final _dio = Dio();
+  final _apiUrl = 'https://mobileapis.manpits.xyz/api';
+
+  late TextEditingController _nameController;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
   late TextEditingController _confirmPasswordController;
@@ -23,6 +28,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
+    _nameController = TextEditingController();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
@@ -30,26 +36,65 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  void _register() {
+  void goRegister() async {
     if (!_emailController.text.contains("@gmail.com") ||
         _emailController.text.isEmpty ||
         _passwordController.text.isEmpty ||
+        _passwordController.text.length < 6 ||
         _passwordController.text != _confirmPasswordController.text) {
       setState(() {
         _isEmailValid = !_emailController.text.contains("@gmail.com") ||
             _emailController.text.isEmpty;
         _isPasswordValid = _passwordController.text.isEmpty ||
+            _passwordController.text.length < 6 ||
             _passwordController.text != _confirmPasswordController.text;
       });
     } else {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HomePage()));
+      try {
+        final _register = await _dio.post(
+          '${_apiUrl}/register',
+          data: {
+            'name': _nameController.text,
+            'email': _emailController.text,
+            'password': _passwordController.text
+          },
+        );
+        final _login = await _dio.post(
+          '${_apiUrl}/login',
+          data: {
+            'email': _emailController.text,
+            'password': _passwordController.text
+          },
+        );
+        _storage.write('token', _login.data['data']['token']);
+        print(_register.data);
+        print(_login.data);
+        final _userInfo = await _dio.get(
+          '${_apiUrl}/user',
+          options: Options(
+            headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
+          ),
+        );
+        _storage.write('id', _userInfo.data['data']['user']['id']);
+        _storage.write('email', _userInfo.data['data']['user']['email']);
+        _storage.write('name', _userInfo.data['data']['user']['name']);
+        print(_storage.read('id'));
+        print(_storage.read('email'));
+        print(_storage.read('name'));
+        Navigator.pushReplacementNamed(context, '/home');
+      } on DioException catch (e) {
+        print('Error response: ${e.response}');
+        print('Error code: ${e.response?.statusCode}');
+        print('Error message: ${e.message}');
+        print('${e.response} - ${e.response?.statusCode}');
+      }
     }
   }
 
@@ -104,6 +149,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 Column(
                   children: <Widget>[
                     TextField(
+                      controller: _nameController,
                       decoration: InputDecoration(
                         labelText: "Username",
                         hintText: "Enter your username",
@@ -123,6 +169,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           borderSide: BorderSide(color: Colors.grey.shade400),
                         ),
                       ),
+                      onChanged: (value) {
+                        print(_nameController.text);
+                      },
                     ),
                     SizedBox(height: 15),
                     TextField(
@@ -151,6 +200,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           borderSide: BorderSide(color: Colors.grey.shade400),
                         ),
                       ),
+                      onChanged: (value) {
+                        print(_emailController.text);
+                      },
                     ),
                     SizedBox(height: 15),
                     TextField(
@@ -242,7 +294,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 SizedBox(height: 10),
                 InkWell(
                   borderRadius: BorderRadius.circular(50),
-                  onTap: _register,
+                  onTap: () {
+                    goRegister();
+                  },
                   child: Ink(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50),
@@ -294,12 +348,6 @@ class _RegisterPageState extends State<RegisterPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                        );
-                      },
                       child: Container(
                         width: 50,
                         height: 50,
@@ -332,13 +380,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ),
                         child: IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage()),
-                            );
-                          },
+                          onPressed: () {},
                           icon: FaIcon(FontAwesomeIcons.facebook),
                           iconSize: 30,
                           color: Colors.blue.shade800,
@@ -359,13 +401,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ),
                         child: IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage()),
-                            );
-                          },
+                          onPressed: () {},
                           icon: FaIcon(FontAwesomeIcons.github),
                           iconSize: 30,
                           color: Colors.black,
@@ -374,12 +410,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     SizedBox(width: 20),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                        );
-                      },
+                      onTap: () {},
                       child: Container(
                         width: 50,
                         height: 50,
@@ -407,10 +438,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     Text("Already have an account? "),
                     InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
-                        );
+                        Navigator.pushNamed(context, '/login');
                       },
                       child: Text(
                         "Login",
