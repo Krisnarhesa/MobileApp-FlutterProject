@@ -1,8 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:progmob_app/forgotpasswordpage.dart';
-import 'package:progmob_app/homepage.dart';
-import 'package:progmob_app/registerpage.dart';
+import 'package:get_storage/get_storage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,6 +11,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _storage = GetStorage();
+  final _dio = Dio();
+  final _apiUrl = 'https://mobileapis.manpits.xyz/api';
+
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
   bool _isPasswordVisible = false;
@@ -32,8 +35,7 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _login() {
-    // Validate email and password
+  void goLogin() async {
     if (!_emailController.text.contains("@gmail.com") ||
         _emailController.text.isEmpty && _passwordController.text.isEmpty) {
       setState(() {
@@ -41,8 +43,33 @@ class _LoginPageState extends State<LoginPage> {
         _isPasswordValid = true;
       });
     } else {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HomePage()));
+      try {
+        final _response = await _dio.post(
+          '${_apiUrl}/login',
+          data: {
+            'email': _emailController.text,
+            'password': _passwordController.text
+          },
+        );
+        print(_response.data);
+        _storage.write('token', _response.data['data']['token']);
+        final _userInfo = await _dio.get(
+          '${_apiUrl}/user',
+          options: Options(
+            headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
+          ),
+        );
+        print(_response.data);
+        _storage.write('id', _userInfo.data['data']['user']['id']);
+        _storage.write('email', _userInfo.data['data']['user']['email']);
+        _storage.write('name', _userInfo.data['data']['user']['name']);
+        print(_storage.read('id'));
+        print(_storage.read('email'));
+        print(_storage.read('name'));
+        Navigator.pushReplacementNamed(context, '/home');
+      } on DioException catch (e) {
+        print('${e.response} - ${e.response?.statusCode}');
+      }
     }
   }
 
@@ -140,6 +167,9 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           keyboardType: TextInputType.emailAddress,
+                          onChanged: (value) {
+                            print(_emailController.text);
+                          },
                         ),
                         SizedBox(height: 15),
                         TextField(
@@ -197,17 +227,16 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
+                          onChanged: (value) {
+                            print(_passwordController.text);
+                          },
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             TextButton(
                               onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            ForgotPasswordPage()));
+                                Navigator.pushNamed(context, '/forgotpassword');
                               },
                               child: Text(
                                 'Forgot Your Password?',
@@ -232,7 +261,9 @@ class _LoginPageState extends State<LoginPage> {
                       child: MaterialButton(
                         minWidth: double.infinity,
                         height: 60,
-                        onPressed: _login,
+                        onPressed: () {
+                          goLogin();
+                        },
                         color: Color(0xff0095FF),
                         elevation: 0,
                         shape: RoundedRectangleBorder(
@@ -256,10 +287,7 @@ class _LoginPageState extends State<LoginPage> {
                       Text("Don't have an account?"),
                       InkWell(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => RegisterPage()));
+                            Navigator.pushNamed(context, '/register');
                           },
                           child: Text(
                             " Sign up",
