@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:progmob_app/loginpage.dart';
 import 'package:progmob_app/registerpage.dart';
@@ -74,6 +75,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 Container(
                   height: MediaQuery.of(context).size.height / 2,
                   width: double.infinity,
+                  alignment: Alignment.center,
                   child: Stack(
                     children: _imagePaths
                         .map(
