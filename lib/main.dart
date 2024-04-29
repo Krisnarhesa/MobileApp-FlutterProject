@@ -5,6 +5,7 @@ import 'package:progmob_app/welcomepage.dart';
 import 'package:progmob_app/registerpage.dart';
 import 'package:progmob_app/loginpage.dart';
 import 'package:progmob_app/homepage.dart';
+import 'package:progmob_app/profilepage.dart';
 
 
 Future<void> main() async {
@@ -23,6 +24,7 @@ class MainApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/home': (context) => HomePage(),
         '/forgotpassword': (context) => ForgotPasswordPage(),
+        '/profile': (context) => ProfilePage(),
       },
       initialRoute: '/',
       debugShowCheckedModeBanner: false,
