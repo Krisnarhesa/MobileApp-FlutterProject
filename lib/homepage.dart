@@ -107,37 +107,42 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     width: 15,
                   ),
-                  SizedBox(
-                    width: 35,
-                    height: 35,
-                    child: Stack(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(35 / 2),
-                          ),
-                          clipBehavior: Clip.hardEdge,
-                          child: Image.asset('assets/avatar.jpg'),
-                        ),
-                        Positioned(
-                          right: 0,
-                          bottom: 0,
-                          child: Container(
-                            width: 16,
-                            height: 16,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/profile');
+                    },
+                    child: SizedBox(
+                      width: 35,
+                      height: 35,
+                      child: Stack(
+                        children: [
+                          Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(35 / 2),
-                              color: Color(0xFFD1E7EE),
                             ),
                             clipBehavior: Clip.hardEdge,
-                            child: Icon(
-                              Icons.notifications,
-                              color: Color(0xFF0095FF),
-                              size: 12,
+                            child: Image.asset('assets/avatar.jpg'),
+                          ),
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Container(
+                              width: 16,
+                              height: 16,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(35 / 2),
+                                color: Color(0xFFD1E7EE),
+                              ),
+                              clipBehavior: Clip.hardEdge,
+                              child: Icon(
+                                Icons.notifications,
+                                color: Color(0xFF0095FF),
+                                size: 12,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],
