@@ -30,37 +30,69 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  void getProfile() async {
-    try {
-      final _response = await _dio.get(
-        '${_apiUrl}/user',
-        options: Options(
-          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
-        ),
-      );
-      print(_response.data);
-    } on DioException catch (e) {
-      print('${e.response} - ${e.response?.statusCode}');
-    }
-  }
+  // void getProfile() async {
+  //   try {
+  //     final _response = await _dio.get(
+  //       '${_apiUrl}/user',
+  //       options: Options(
+  //         headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
+  //       ),
+  //     );
+  //     print(_response.data);
+  //   } on DioException catch (e) {
+  //     print('${e.response} - ${e.response?.statusCode}');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
+    String _name = _storage.read('name') ?? '';
+    String _email = _storage.read('email') ?? '';
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: goLogout,
+          ),
+        ],
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            ElevatedButton(
-              onPressed: getProfile,
-              child: const Text('Get Profile'),
+            Center(
+              child: CircleAvatar(
+                radius: 50,
+                backgroundColor:
+                    Colors.blue, // Ubah warna latar belakang sesuai kebutuhan
+                child: Text(
+                  _name.isNotEmpty ? _name[0].toUpperCase() : '',
+                  style: TextStyle(
+                      fontSize: 32,
+                      color: Colors.white), // Ubah warna teks sesuai kebutuhan
+                ),
+              ),
             ),
-            ElevatedButton(
-              onPressed: goLogout,
-              child: const Text('Logout'),
+            SizedBox(height: 20),
+            Text(
+              'Name:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              _name,
+              style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Email:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              _email,
+              style: TextStyle(fontSize: 16),
             ),
           ],
         ),
@@ -68,3 +100,4 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
+
