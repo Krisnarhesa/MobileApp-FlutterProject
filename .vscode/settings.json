@@ -1,4 +1,5 @@
 {
   "cmake.configureOnOpen": false,
-  "cSpell.words": ["gopay"]
+  "cSpell.words": ["gopay"],
+  "CodeGPT.apiKey": "CodeGPT Plus Beta"
 }
