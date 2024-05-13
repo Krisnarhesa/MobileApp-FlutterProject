@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get_storage/get_storage.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -9,6 +11,65 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _storage = GetStorage();
+  final _dio = Dio();
+  final _apiUrl = 'https://mobileapis.manpits.xyz/api';
+
+  List<dynamic> _anggotas = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getListAnggota();
+  }
+
+  Future<void> getListAnggota() async {
+    try {
+      final response = await _dio.get(
+        '$_apiUrl/anggota',
+        options: Options(
+          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
+        ),
+      );
+
+      setState(() {
+        _anggotas = response.data['data']['anggotas'] ?? [];
+      });
+    } catch (e) {
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Gagal mendapatkan daftar anggota'),
+        ),
+      );
+    }
+  }
+
+  void deleteAnggota(BuildContext context, int id) async {
+    try {
+      await _dio.delete(
+        '$_apiUrl/anggota/$id',
+        options: Options(
+          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Anggota berhasil dihapus'),
+        ),
+      );
+      // Refresh the list after delete
+      getListAnggota();
+    } catch (e) {
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Gagal menghapus anggota'),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -397,6 +458,116 @@ class _HomePageState extends State<HomePage> {
                       .toList(),
                 ),
               ),
+            ),
+            SizedBox(height: 30),
+            Padding(
+              padding: const EdgeInsets.only(left: 15, right: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'List Anggota',
+                    style: TextStyle(
+                      color: Colors.blue.shade400,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        'Tambah Anggota',
+                        style: TextStyle(
+                          color: Color(0xff0095FF),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(width: 5),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/addanggota');
+                        },
+                        child: Icon(
+                          Icons.add_circle,
+                          color: Colors.blue.shade400,
+                          size: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 15),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: _anggotas.length,
+              itemBuilder: (context, index) {
+                final anggota = _anggotas[index];
+                return Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 15),
+                  child: Card(
+                    color: Color.fromARGB(255, 0, 134, 231),
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      side: BorderSide(color: Colors.grey),
+                    ),
+                    child: ListTile(
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 16), // Adjust padding here
+                      title: Text(anggota['nama'] ?? ""),
+                      titleTextStyle: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900,
+                      ),
+                      subtitle: Text(anggota['telepon'] ?? ""),
+                      subtitleTextStyle: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // IconButton(
+                          //   icon: FaIcon(FontAwesomeIcons.user,
+                          //       color: Colors.white), // Change icon color here
+                          //   onPressed: () {
+                          //     Navigator.pushNamed(
+                          //       context,
+                          //       '/detailanggota',
+                          //       arguments: anggota,
+                          //     );
+                          //   },
+                          // ),
+                          IconButton(
+                            icon: Icon(Icons.edit,
+                                color: Colors.white), // Change icon color here
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                '/editanggota',
+                                arguments: anggota,
+                              ).then((_) {
+                                // Refresh the list after returning from edit
+                                getListAnggota();
+                              });
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete,
+                                color: Colors.white), // Change icon color here
+                            onPressed: () {
+                              deleteAnggota(context, anggota['id']);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),
