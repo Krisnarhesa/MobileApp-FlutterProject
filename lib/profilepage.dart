@@ -8,8 +8,7 @@ class ProfilePage extends StatefulWidget {
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
-
-class _ProfilePageState extends State<ProfilePage> {
+  class _ProfilePageState extends State<ProfilePage> {
   final _storage = GetStorage();
   final _dio = Dio();
   final _apiUrl = 'https://mobileapis.manpits.xyz/api';
@@ -29,20 +28,6 @@ class _ProfilePageState extends State<ProfilePage> {
       print('${e.response} - ${e.response?.statusCode}');
     }
   }
-
-  // void getProfile() async {
-  //   try {
-  //     final _response = await _dio.get(
-  //       '${_apiUrl}/user',
-  //       options: Options(
-  //         headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
-  //       ),
-  //     );
-  //     print(_response.data);
-  //   } on DioException catch (e) {
-  //     print('${e.response} - ${e.response?.statusCode}');
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
