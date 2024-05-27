@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 
 class HomePage extends StatefulWidget {
@@ -45,28 +46,67 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void deleteAnggota(BuildContext context, int id) async {
+  void _showDeleteConfirmationDialog(BuildContext context, int id) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Konfirmasi Hapus',
+            style: TextStyle(
+              color: Color.fromARGB(255, 16, 110, 187),
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Text(
+            'Apakah anda yakin ingin menghapus anggota ini?',
+            style: TextStyle(
+              fontSize: 16,
+              color: Color.fromARGB(255, 16, 110, 187),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child:
+                  Text('Batal', style: TextStyle(color: Colors.blue.shade400)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton.icon(
+              icon: Icon(Icons.delete, color: Colors.red.shade600),
+              label: Text(
+                'Hapus',
+                style: TextStyle(color: Colors.red.shade600),
+              ),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await deleteAnggota(id);
+              },
+            ),
+          ],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> deleteAnggota(int id) async {
     try {
-      await _dio.delete(
+      await Dio().delete(
         '$_apiUrl/anggota/$id',
         options: Options(
           headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
         ),
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Anggota berhasil dihapus'),
-        ),
-      );
       // Refresh the list after delete
       getListAnggota();
     } catch (e) {
-      print(e);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Gagal menghapus anggota'),
-        ),
-      );
+      throw Exception('Failed to delete member');
     }
   }
 
@@ -473,6 +513,30 @@ class _HomePageState extends State<HomePage> {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
+                  //text dan icon Transaksi
+                  Row(
+                    children: [
+                      Text(
+                        'Transaksi',
+                        style: TextStyle(
+                          color: Color(0xff0095FF),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(width: 5),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/transaksi');
+                        },
+                        child: FaIcon(
+                          FontAwesomeIcons.moneyCheckDollar,
+                          color: Colors.blue.shade400,
+                          size: 20,
+                        ),
+                      ),
+                    ],
+                  ),
                   Row(
                     children: [
                       Text(
@@ -515,51 +579,75 @@ class _HomePageState extends State<HomePage> {
                       side: BorderSide(color: Colors.grey),
                     ),
                     child: ListTile(
-                      contentPadding: EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 16), // Adjust padding here
+                      leading: IconButton(
+                        icon: FaIcon(
+                          FontAwesomeIcons.user,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        onPressed: () {},
+                      ),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                       title: Text(anggota['nama'] ?? ""),
                       titleTextStyle: TextStyle(
+                        fontSize: 20,
                         color: Colors.white,
                         fontWeight: FontWeight.w900,
                       ),
                       subtitle: Text(anggota['telepon'] ?? ""),
                       subtitleTextStyle: TextStyle(
+                        fontSize: 16,
                         color: Colors.white,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w400,
                       ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // IconButton(
-                          //   icon: FaIcon(FontAwesomeIcons.user,
-                          //       color: Colors.white), // Change icon color here
-                          //   onPressed: () {
-                          //     Navigator.pushNamed(
-                          //       context,
-                          //       '/detailanggota',
-                          //       arguments: anggota,
-                          //     );
-                          //   },
-                          // ),
+                          //icon button histori transaksi
                           IconButton(
-                            icon: Icon(Icons.edit,
-                                color: Colors.white), // Change icon color here
+                            icon: FaIcon(
+                              FontAwesomeIcons.wallet,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                '/tabungan',
+                                arguments: anggota,
+                              );
+                            },
+                          ),
+                          //icon button info detail anggota dan saldo
+                          IconButton(
+                            icon: Icon(Icons.info, color: Colors.white),
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                '/detailanggota',
+                                arguments: anggota,
+                              );
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.edit, color: Colors.white),
                             onPressed: () {
                               Navigator.pushNamed(
                                 context,
                                 '/editanggota',
                                 arguments: anggota,
                               ).then((_) {
-                                // Refresh the list after returning from edit
                                 getListAnggota();
                               });
                             },
                           ),
                           IconButton(
-                            icon: Icon(Icons.delete,
-                                color: Colors.white), // Change icon color here
+                            icon: Icon(Icons.delete, color: Colors.white),
                             onPressed: () {
-                              deleteAnggota(context, anggota['id']);
+                              _showDeleteConfirmationDialog(
+                                context,
+                                anggota['id'],
+                              );
                             },
                           ),
                         ],
