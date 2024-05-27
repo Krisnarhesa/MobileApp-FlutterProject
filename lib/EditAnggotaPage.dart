@@ -13,19 +13,21 @@ class _EditAnggotaPageState extends State<EditAnggotaPage> {
   final _apiUrl = 'https://mobileapis.manpits.xyz/api';
   late dynamic anggota;
 
-  TextEditingController _nomerIndukController = TextEditingController();
-  TextEditingController _teleponController = TextEditingController();
-  TextEditingController _namaController = TextEditingController();
-  TextEditingController _alamatController = TextEditingController();
-  TextEditingController _tglLahirController = TextEditingController();
+  TextEditingController nomerIndukController = TextEditingController();
+  TextEditingController teleponController = TextEditingController();
+  TextEditingController namaController = TextEditingController();
+  TextEditingController alamatController = TextEditingController();
+  TextEditingController tglLahirController = TextEditingController();
+  TextEditingController statusController = TextEditingController();
 
   @override
   void dispose() {
-    _nomerIndukController.dispose();
-    _teleponController.dispose();
-    _namaController.dispose();
-    _alamatController.dispose();
-    _tglLahirController.dispose();
+    nomerIndukController.dispose();
+    teleponController.dispose();
+    namaController.dispose();
+    alamatController.dispose();
+    tglLahirController.dispose();
+    statusController.dispose();
     super.dispose();
   }
 
@@ -35,11 +37,12 @@ class _EditAnggotaPageState extends State<EditAnggotaPage> {
     // Get anggota data from argument
     anggota = ModalRoute.of(context)?.settings.arguments;
     // Set anggota data to text controller
-    _nomerIndukController.text = anggota['nomor_induk'].toString();
-    _teleponController.text = anggota['telepon'];
-    _namaController.text = anggota['nama'];
-    _alamatController.text = anggota['alamat'];
-    _tglLahirController.text = anggota['tgl_lahir'];
+    nomerIndukController.text = anggota['nomor_induk'].toString();
+    teleponController.text = anggota['telepon'];
+    namaController.text = anggota['nama'];
+    alamatController.text = anggota['alamat'];
+    tglLahirController.text = anggota['tgl_lahir'];
+    statusController.text = anggota['status_aktif'].toString();
   }
 
   @override
@@ -48,44 +51,172 @@ class _EditAnggotaPageState extends State<EditAnggotaPage> {
       appBar: AppBar(
         title: Text('Edit Anggota'),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(20),
+      body: Container(
+        padding: EdgeInsets.symmetric(horizontal: 40),
+        height: MediaQuery.of(context).size.height - 50,
+        width: double.infinity,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(
-              controller: _nomerIndukController,
-              decoration: InputDecoration(labelText: 'Nomer Induk'),
+            SizedBox(height: 15),
+            Center(
+              child: CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.blue,
+                child: Icon(
+                  Icons.person,
+                  size: 50,
+                  color: Colors.white,
+                ),
+              ),
             ),
+            SizedBox(height: 15),
             TextField(
-              controller: _teleponController,
-              decoration: InputDecoration(labelText: 'Telepon'),
+              controller: nomerIndukController,
+              decoration: InputDecoration(
+                labelText: 'Nomor Induk',
+                labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400),
+                prefixIcon:
+                    Icon(Icons.numbers, color: Colors.blue.shade400, size: 20),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                ),
+              ),
             ),
+            SizedBox(height: 15),
             TextField(
-              controller: _namaController,
-              decoration: InputDecoration(labelText: 'Nama'),
+              controller: namaController,
+              decoration: InputDecoration(
+                labelText: 'Nama',
+                labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400),
+                prefixIcon:
+                    Icon(Icons.person, color: Colors.blue.shade400, size: 20),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                ),
+              ),
             ),
+            SizedBox(height: 15),
             TextField(
-              controller: _alamatController,
-              decoration: InputDecoration(labelText: 'Alamat'),
+              controller: alamatController,
+              decoration: InputDecoration(
+                labelText: 'Alamat',
+                labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400),
+                prefixIcon:
+                    Icon(Icons.home, color: Colors.blue.shade400, size: 20),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                ),
+              ),
             ),
+            SizedBox(height: 15),
             TextField(
-              controller: _tglLahirController,
-              decoration: InputDecoration(labelText: 'Tanggal Lahir'),
+              readOnly: true,
+              controller: tglLahirController,
+              decoration: InputDecoration(
+                labelText: 'Tanggal Lahir',
+                labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400),
+                prefixIcon: Icon(Icons.date_range,
+                    color: Colors.blue.shade400, size: 20),
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.calendar_today),
+                  color: Colors.blue.shade400,
+                  onPressed: _showDatePicker,
+                ),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                ),
+              ),
+            ),
+            SizedBox(height: 15),
+            TextField(
+              controller: teleponController,
+              decoration: InputDecoration(
+                labelText: 'Telepon',
+                labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400),
+                prefixIcon: Icon(Icons.phone_rounded,
+                    color: Colors.blue.shade400, size: 20),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                ),
+              ),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
+            TextField(
+              controller: statusController,
+              decoration: InputDecoration(
+                labelText: 'Status Aktif',
+                labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400),
+                prefixIcon: Icon(Icons.check_circle,
+                    color: Colors.blue.shade400, size: 20),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            InkWell(
+              borderRadius: BorderRadius.circular(10),
+              onTap: () {
                 editAnggota(
                   anggota['id'],
-                  _nomerIndukController.text,
-                  _teleponController.text,
-                  _namaController.text,
-                  _alamatController.text,
-                  _tglLahirController.text,
+                  nomerIndukController.text,
+                  teleponController.text,
+                  namaController.text,
+                  alamatController.text,
+                  tglLahirController.text,
+                  statusController.text,
                 );
               },
-              child: Text('Simpan Perubahan'),
+              child: Ink(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  border: Border.all(color: Colors.black),
+                  color: Color(0xff0095FF),
+                ),
+                child: Container(
+                  width: double.infinity,
+                  height: 60,
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Simpan Perubahan",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -100,6 +231,7 @@ class _EditAnggotaPageState extends State<EditAnggotaPage> {
     String nama,
     String alamat,
     String tglLahir,
+    String statusAktif,
   ) async {
     try {
       final _response = await _dio.put(
@@ -110,7 +242,7 @@ class _EditAnggotaPageState extends State<EditAnggotaPage> {
           'alamat': alamat,
           'tgl_lahir': tglLahir,
           'telepon': telepon,
-          'status_aktif': 1,
+          'status_aktif': statusAktif,
         },
         options: Options(
           headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
@@ -132,5 +264,20 @@ class _EditAnggotaPageState extends State<EditAnggotaPage> {
       );
       print('${e.response} - ${e.response?.statusCode}');
     }
+  }
+
+  void _showDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    ).then((value) {
+      if (value != null) {
+        setState(() {
+          tglLahirController.text = value.toString().split(' ')[0];
+        });
+      }
+    });
   }
 }
