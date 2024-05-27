@@ -8,7 +8,8 @@ class ProfilePage extends StatefulWidget {
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
-  class _ProfilePageState extends State<ProfilePage> {
+
+class _ProfilePageState extends State<ProfilePage> {
   final _storage = GetStorage();
   final _dio = Dio();
   final _apiUrl = 'https://mobileapis.manpits.xyz/api';
@@ -23,10 +24,64 @@ class ProfilePage extends StatefulWidget {
       );
       print(_response.data);
       _storage.erase();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Berhasil Logout'),
+        ),
+      );
       Navigator.pushReplacementNamed(context, '/');
     } on DioException catch (e) {
       print('${e.response} - ${e.response?.statusCode}');
     }
+  }
+
+  //Logout Alert Dialog
+  void _showLogoutDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Konfirmasi Logout',
+            style: TextStyle(
+              color: Color.fromARGB(255, 16, 110, 187),
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Text(
+            'Apakah anda yakin ingin logout?',
+            style: TextStyle(
+              fontSize: 16,
+              color: Color.fromARGB(255, 16, 110, 187),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child:
+                  Text('Batal', style: TextStyle(color: Colors.blue.shade400)),
+            ),
+            TextButton.icon(
+              icon: Icon(Icons.logout_outlined, color: Colors.red.shade600),
+              label: Text(
+                'Logout',
+                style: TextStyle(color: Colors.red.shade600),
+              ),
+              onPressed: () {
+                goLogout();
+              },
+            ),
+          ],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -39,7 +94,9 @@ class ProfilePage extends StatefulWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
-            onPressed: goLogout,
+            onPressed: () {
+              _showLogoutDialog();
+            },
           ),
         ],
       ),
@@ -64,20 +121,26 @@ class ProfilePage extends StatefulWidget {
             SizedBox(height: 20),
             Text(
               'Name:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.blue.shade400,
+                  fontWeight: FontWeight.bold),
             ),
             Text(
               _name,
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             SizedBox(height: 10),
             Text(
               'Email:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.blue.shade400,
+                  fontWeight: FontWeight.bold),
             ),
             Text(
               _email,
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -85,4 +148,3 @@ class ProfilePage extends StatefulWidget {
     );
   }
 }
-
