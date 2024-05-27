@@ -69,57 +69,169 @@ class _AddAnggotaPageState extends State<AddAnggotaPage> {
       appBar: AppBar(
         title: Text('Tambah Anggota'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView(
+      body: Container(
+        padding: EdgeInsets.symmetric(horizontal: 40),
+        height: MediaQuery.of(context).size.height - 50,
+        width: double.infinity,
+        child: Column(
           children: [
+            SizedBox(height: 15),
+            Center(
+              child: CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.blue,
+                child: Icon(
+                  Icons.person_add,
+                  size: 50,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            SizedBox(height: 15),
             TextField(
-              decoration: InputDecoration(labelText: 'Nomor Induk'),
               controller: nomorIndukController,
+              decoration: InputDecoration(
+                labelText: 'Nomor Induk',
+                hintText: 'Enter your nomor induk',
+                hintStyle: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 14.0,
+                ),
+                labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400),
+                prefixIcon:
+                    Icon(Icons.numbers, color: Colors.blue.shade400, size: 20),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                ),
+              ),
               onChanged: (value) {
                 setState(() {
                   nomer_induk = value;
                 });
               },
             ),
+            SizedBox(height: 15),
             TextField(
-              decoration: InputDecoration(labelText: 'Nama'),
               controller: namaController,
+              decoration: InputDecoration(
+                labelText: 'Nama',
+                hintText: 'Enter your nama',
+                hintStyle: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 14.0,
+                ),
+                labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400),
+                prefixIcon:
+                    Icon(Icons.person, color: Colors.blue.shade400, size: 20),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                ),
+              ),
               onChanged: (value) {
                 setState(() {
                   nama = value;
                 });
               },
             ),
+            SizedBox(height: 15),
             TextField(
-              decoration: InputDecoration(labelText: 'Alamat'),
               controller: alamatController,
+              decoration: InputDecoration(
+                labelText: 'Alamat',
+                hintText: 'Enter your alamat',
+                hintStyle: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 14.0,
+                ),
+                labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400),
+                prefixIcon:
+                    Icon(Icons.home, color: Colors.blue.shade400, size: 20),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                ),
+              ),
               onChanged: (value) {
                 setState(() {
                   alamat = value;
                 });
               },
             ),
+            SizedBox(height: 15),
             TextField(
-              decoration: InputDecoration(labelText: 'Tanggal Lahir'),
+              readOnly: true,
               controller: tanggalLahirController,
-              onChanged: (value) {
-                setState(() {
-                  tgl_lahir = value;
-                });
-              },
+              decoration: InputDecoration(
+                labelText: 'Tanggal Lahir',
+                hintText: 'Select your date of birth',
+                hintStyle: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 14.0,
+                ),
+                labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400),
+                prefixIcon: Icon(Icons.date_range,
+                    color: Colors.blue.shade400, size: 20),
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.calendar_today),
+                  color: Colors.blue.shade400,
+                  onPressed: _showDatePicker,
+                ),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                ),
+              ),
             ),
+            SizedBox(height: 15),
             TextField(
-              decoration: InputDecoration(labelText: 'Telepon'),
               controller: teleponController,
+              decoration: InputDecoration(
+                labelText: 'Telepon',
+                hintText: 'Enter your telepon',
+                hintStyle: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 14.0,
+                ),
+                labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400),
+                prefixIcon: Icon(Icons.phone_rounded,
+                    color: Colors.blue.shade400, size: 20),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                ),
+              ),
               onChanged: (value) {
                 setState(() {
                   telepon = value;
                 });
               },
             ),
-            ElevatedButton(
-              onPressed: () {
+            SizedBox(height: 20),
+            InkWell(
+              borderRadius: BorderRadius.circular(10),
+              onTap: () {
                 AddAnggota(
                   context,
                   nomorIndukController.text,
@@ -129,11 +241,45 @@ class _AddAnggotaPageState extends State<AddAnggotaPage> {
                   tanggalLahirController.text,
                 );
               },
-              child: Text('Simpan'),
+              child: Ink(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  border: Border.all(color: Colors.black),
+                  color: Color(0xff0095FF),
+                ),
+                child: Container(
+                  width: double.infinity,
+                  height: 60,
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Simpan",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _showDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    ).then((value) {
+      if (value != null) {
+        setState(() {
+          tanggalLahirController.text = value.toString().split(' ')[0];
+        });
+      }
+    });
   }
 }
