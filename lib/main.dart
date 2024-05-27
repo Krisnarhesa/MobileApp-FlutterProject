@@ -8,6 +8,9 @@ import 'package:progmob_app/registerpage.dart';
 import 'package:progmob_app/welcomepage.dart';
 import 'package:progmob_app/addanggotapage.dart';
 import 'package:progmob_app/EditAnggotaPage.dart';
+import 'package:progmob_app/DetailAnggotaPage.dart';
+import 'package:progmob_app/TransaksiPage.dart';
+import 'package:progmob_app/TabunganPage.dart';
 
 Future<void> main() async {
   await GetStorage.init();
@@ -28,6 +31,9 @@ class MainApp extends StatelessWidget {
         '/profile': (context) => ProfilePage(),
         '/addanggota': (context) => AddAnggotaPage(),
         '/editanggota': (context) => EditAnggotaPage(),
+        '/detailanggota': (context) => DetailAnggotaPage(),
+        '/transaksi' : (context) => TransaksiPage(),
+        '/tabungan' : (context) => TabunganPage(),
       },
       initialRoute: '/',
       debugShowCheckedModeBanner: false,
