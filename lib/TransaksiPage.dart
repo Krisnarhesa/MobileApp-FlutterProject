@@ -104,6 +104,7 @@ class _TransaksiPageState extends State<TransaksiPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            SizedBox(height: 20),
             DropdownButtonFormField<Map<String, dynamic>>(
               value: _selectedAnggota,
               decoration: InputDecoration(
