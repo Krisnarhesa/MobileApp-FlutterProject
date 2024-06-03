@@ -540,6 +540,29 @@ class _HomePageState extends State<HomePage> {
                   Row(
                     children: [
                       Text(
+                        'Bunga',
+                        style: TextStyle(
+                          color: Color(0xff0095FF),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(width: 5),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/bunga');
+                        },
+                        child: FaIcon(
+                          FontAwesomeIcons.coins,
+                          color: Colors.blue.shade400,
+                          size: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
                         'Tambah Anggota',
                         style: TextStyle(
                           color: Color(0xff0095FF),
