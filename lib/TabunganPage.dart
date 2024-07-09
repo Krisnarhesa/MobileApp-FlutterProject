@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 
 class TabunganPage extends StatefulWidget {
   @override
@@ -73,6 +74,13 @@ class _TabunganPageState extends State<TabunganPage> {
     }
   }
 
+// Fungsi untuk memformat nilai menjadi format rupiah
+  String formatRupiah(double value) {
+    final formatCurrency =
+        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    return formatCurrency.format(value);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,27 +147,37 @@ class _TabunganPageState extends State<TabunganPage> {
                       final transaksi = _historiTransaksi[index];
                       final trxType = transaksiTypes[transaksi['trx_id']] ??
                           'Tipe Transaksi Tidak Tersedia';
-                      final trxNominal =
-                          transaksi['trx_nominal'] ?? 'Nominal Tidak Tersedia';
+                      final trxNominal = transaksi['trx_nominal'].toString();
                       final trxTanggal = transaksi['trx_tanggal'] ??
                           'Tanggal Transaksi Tidak Tersedia';
 
                       Color textColor;
+                      IconData iconData;
                       if (trxType == 'Saldo Awal' || trxType == 'Simpanan') {
                         textColor = Colors.green;
+                        iconData = Icons
+                            .arrow_upward; // Icon panah ke atas untuk simpanan dan saldo awal
                       } else if (trxType == 'Penarikan') {
                         textColor = Colors.red;
+                        iconData = Icons
+                            .arrow_downward; // Icon panah ke bawah untuk penarikan
                       } else {
                         textColor = Colors.black;
+                        iconData = Icons
+                            .help; // Default icon jika tidak ada jenis transaksi yang cocok
                       }
 
                       return ListTile(
+                        leading: Icon(
+                          iconData,
+                          color: textColor,
+                        ),
                         title: Text(
                           trxType,
                           style: TextStyle(color: textColor),
                         ),
                         subtitle: Text(
-                          'Nominal: Rp.$trxNominal',
+                          formatRupiah(double.parse(trxNominal)),
                           style: TextStyle(color: textColor),
                         ),
                         trailing: Text(
