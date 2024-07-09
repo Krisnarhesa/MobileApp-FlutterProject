@@ -12,6 +12,8 @@ import 'package:progmob_app/loginpage.dart';
 import 'package:progmob_app/profilepage.dart';
 import 'package:progmob_app/registerpage.dart';
 import 'package:progmob_app/welcomepage.dart';
+import 'package:progmob_app/addTransaksi.dart';
+
 
 Future<void> main() async {
   await GetStorage.init();
@@ -37,6 +39,7 @@ class MainApp extends StatelessWidget {
         '/transaksi': (context) => TransaksiPage(),
         '/tabungan': (context) => TabunganPage(),
         '/bunga': (context) => BungaPage(),
+        '/addtransaksi': (context) => AddTransaksiPage(),
       },
       initialRoute: '/',
       debugShowCheckedModeBanner: false,

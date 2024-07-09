@@ -64,6 +64,54 @@ class _BungaPageState extends State<BungaPage> {
     }
   }
 
+  void _konfirmasiBunga() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Konfirmasi Tambah Bunga',
+            style: TextStyle(
+              color: Color.fromARGB(255, 16, 110, 187),
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Text(
+            'Apakah anda yakin ingin menambahkan bunga?',
+            style: TextStyle(
+              fontSize: 16,
+              color: Color.fromARGB(255, 16, 110, 187),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child:
+                  Text('Batal', style: TextStyle(color: Colors.red.shade600)),
+            ),
+            TextButton.icon(
+              icon: Icon(Icons.check_circle, color: Colors.blue.shade400),
+              label: Text(
+                'Ya',
+                style: TextStyle(color: Colors.blue.shade400),
+              ),
+              onPressed: () {
+                AddBunga(context, persenController.text, isaktif);
+              },
+            ),
+          ],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> GetListBunga() async {
     try {
       final _response = await _dio.get(
@@ -95,8 +143,88 @@ class _BungaPageState extends State<BungaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('List bunga & Tambah Bunga'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80.0),
+        child: AppBar(
+          backgroundColor: Colors.blue.shade400,
+          automaticallyImplyLeading: false,
+          elevation: 0,
+          toolbarHeight: 71,
+          title: Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 0, 134, 231),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/home');
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: ModalRoute.of(context)?.settings.name == '/home'
+                          ? Colors.white
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Text(
+                      'Anggota',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: ModalRoute.of(context)?.settings.name == '/home'
+                            ? Colors.blue.shade400
+                            : Colors.white,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+                ...['Transaksi', 'Bunga', 'Profile'].map(
+                  (title) {
+                    return InkWell(
+                      onTap: () {
+                        // Navigate to different screens based on the title
+                        if (title == 'Transaksi') {
+                          Navigator.pushNamed(context, '/transaksi');
+                        } else if (title == 'Bunga') {
+                          Navigator.pushNamed(context, '/bunga');
+                        } else if (title == 'Profile') {
+                          Navigator.pushNamed(context, '/profile');
+                        }
+                      },
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: ModalRoute.of(context)?.settings.name ==
+                                  '/${title.toLowerCase()}'
+                              ? Colors.white
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: ModalRoute.of(context)?.settings.name ==
+                                    '/${title.toLowerCase()}'
+                                ? Colors.blue.shade400
+                                : Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ).toList(),
+              ],
+            ),
+          ),
+        ),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 40),
@@ -104,7 +232,18 @@ class _BungaPageState extends State<BungaPage> {
         width: double.infinity,
         child: Column(
           children: [
-            SizedBox(height: 15),
+            SizedBox(height: 30),
+            Center(
+              child: Text(
+                'Manajemen Bunga',
+                style: TextStyle(
+                  color: Colors.blue.shade400,
+                  fontSize: 25,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
             Center(
               child: CircleAvatar(
                 radius: 50,
@@ -175,9 +314,7 @@ class _BungaPageState extends State<BungaPage> {
               onChanged: (String? newValue) {
                 setState(() {
                   dropdownValue = newValue!;
-                  isaktif = newValue == 'Aktif'
-                      ? '1'
-                      : '0'; // Convert to desired value
+                  isaktif = newValue == 'Aktif' ? '1' : '0';
                 });
               },
             ),
@@ -185,11 +322,7 @@ class _BungaPageState extends State<BungaPage> {
             InkWell(
               borderRadius: BorderRadius.circular(10),
               onTap: () {
-                AddBunga(
-                  context,
-                  persenController.text,
-                  isaktif,
-                );
+                _konfirmasiBunga();
               },
               child: Ink(
                 decoration: BoxDecoration(

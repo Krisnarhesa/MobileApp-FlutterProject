@@ -39,6 +39,12 @@ void AddAnggota(context, nomer_induk, telepon, nama, alamat, tgl_lahir) async {
       ),
     );
     print(_response.data);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Anggota berhasil ditambahkan'),
+        duration: Duration(seconds: 3),
+      ),
+    );
     Navigator.pop(context);
     Navigator.pushReplacementNamed(context, '/home');
   } on DioException catch (e) {
@@ -61,6 +67,10 @@ class _AddAnggotaPageState extends State<AddAnggotaPage> {
     tanggalLahirController.dispose();
     teleponController.dispose();
     super.dispose();
+  }
+
+  String generateNomorInduk(String telepon, String tglLahir) {
+    return telepon + tglLahir.replaceAll('-', '');
   }
 
   @override
@@ -89,10 +99,11 @@ class _AddAnggotaPageState extends State<AddAnggotaPage> {
             ),
             SizedBox(height: 15),
             TextField(
+              readOnly: true,
               controller: nomorIndukController,
               decoration: InputDecoration(
                 labelText: 'Nomor Induk',
-                hintText: 'Enter your nomor induk',
+                hintText: 'Nomor Induk akan Terisi otomatis',
                 hintStyle: TextStyle(
                   color: Colors.grey,
                   fontSize: 14.0,
@@ -109,11 +120,6 @@ class _AddAnggotaPageState extends State<AddAnggotaPage> {
                   borderSide: BorderSide(color: Colors.grey.shade400),
                 ),
               ),
-              onChanged: (value) {
-                setState(() {
-                  nomer_induk = value;
-                });
-              },
             ),
             SizedBox(height: 15),
             TextField(
@@ -232,9 +238,13 @@ class _AddAnggotaPageState extends State<AddAnggotaPage> {
             InkWell(
               borderRadius: BorderRadius.circular(10),
               onTap: () {
+                final generatedNomorInduk = generateNomorInduk(
+                  teleponController.text,
+                  tanggalLahirController.text,
+                );
                 AddAnggota(
                   context,
-                  nomorIndukController.text,
+                  generatedNomorInduk,
                   teleponController.text,
                   namaController.text,
                   alamatController.text,
