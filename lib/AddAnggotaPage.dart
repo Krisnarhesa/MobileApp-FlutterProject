@@ -38,7 +38,7 @@ void AddAnggota(context, nomer_induk, telepon, nama, alamat, tgl_lahir) async {
         headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
       ),
     );
-    print(_response.data);
+    print(_response.data['success']);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Anggota berhasil ditambahkan'),
@@ -48,7 +48,19 @@ void AddAnggota(context, nomer_induk, telepon, nama, alamat, tgl_lahir) async {
     Navigator.pop(context);
     Navigator.pushReplacementNamed(context, '/home');
   } on DioException catch (e) {
+    String message = "";
+    if (e.response?.data['message'].contains('SQLSTATE[22007]')) {
+      message = 'No telepon Tidak Valid';
+    } else {
+      message = e.response?.data['message'];
+    }
     print('${e.response} - ${e.response?.statusCode}');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Gagal: ${message}'),
+      ),
+    );
+    return;
   }
 }
 

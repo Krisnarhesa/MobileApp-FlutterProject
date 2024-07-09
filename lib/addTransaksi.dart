@@ -106,25 +106,6 @@ class _AddTransaksiPageState extends State<AddTransaksiPage> {
 
   Future<void> goAddTransaksi() async {
     final trxNominal = double.tryParse(_addTransaksiController.text);
-
-    if (trxNominal == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Nominal transaksi tidak valid'),
-        ),
-      );
-      return;
-    }
-
-    if (_selectedTransactionType == '3' && trxNominal > currentBalance) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Transaksi Gagal: Penarikan melebihi saldo'),
-        ),
-      );
-      return;
-    }
-
     try {
       final response = await _dio.post(
         '$_apiUrl/tabungan',
@@ -138,7 +119,7 @@ class _AddTransaksiPageState extends State<AddTransaksiPage> {
         ),
       );
       print(response.data);
-      if (response.data['sucess'] == false) {
+      if (response.data['success'] == false) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Transaksi Gagal: ${response.data['message']}'),
@@ -146,6 +127,48 @@ class _AddTransaksiPageState extends State<AddTransaksiPage> {
         );
         return;
       }
+      if (trxNominal == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Nominal transaksi tidak valid'),
+          ),
+        );
+        return;
+      }
+      if (trxNominal <= 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Nominal transaksi harus lebih dari 0'),
+          ),
+        );
+        return;
+      }
+
+      // Pengecekan untuk transaksi saldo awal
+      if (_selectedTransactionType == '1') {
+        // Memeriksa apakah saldo awal sudah pernah ditambahkan sebelumnya
+        if (firstTransactionCompleted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content:
+                  Text('Transaksi Gagal: Saldo awal sudah pernah ditambahkan'),
+            ),
+          );
+          return;
+        }
+        // Jika belum pernah, tandai bahwa saldo awal sudah ditambahkan
+        firstTransactionCompleted = true;
+      }
+
+      if (_selectedTransactionType == '3' && trxNominal > currentBalance) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Transaksi Gagal: Penarikan melebihi saldo'),
+          ),
+        );
+        return;
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Transaksi Berhasil'),
