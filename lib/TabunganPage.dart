@@ -144,7 +144,8 @@ class _TabunganPageState extends State<TabunganPage> {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: _historiTransaksi.length,
                     itemBuilder: (context, index) {
-                      final transaksi = _historiTransaksi[index];
+                      final transaksi = _historiTransaksi[
+                          _historiTransaksi.length - 1 - index];
                       final trxType = transaksiTypes[transaksi['trx_id']] ??
                           'Tipe Transaksi Tidak Tersedia';
                       final trxNominal = transaksi['trx_nominal'].toString();
