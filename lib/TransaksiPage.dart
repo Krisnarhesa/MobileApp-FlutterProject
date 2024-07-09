@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 
 class TransaksiPage extends StatefulWidget {
   @override
@@ -80,6 +81,13 @@ class _TransaksiPageState extends State<TransaksiPage> {
       print('Error fetching saldo: $e');
       return null;
     }
+  }
+
+  // Fungsi untuk memformat nilai menjadi format rupiah
+  String formatRupiah(double value) {
+    final formatCurrency =
+        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    return formatCurrency.format(value);
   }
 
   @override
@@ -275,7 +283,7 @@ class _TransaksiPageState extends State<TransaksiPage> {
                           );
                         } else {
                           return Text(
-                            snapshot.data!.toString(),
+                            formatRupiah(snapshot.data!),
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.white,

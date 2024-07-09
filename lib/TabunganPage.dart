@@ -55,9 +55,9 @@ class _TabunganPageState extends State<TabunganPage> {
       );
 
       if (response.statusCode == 200) {
-        print('Response Data: ${response.data}'); // Print the response data
+        print('Response Data: ${response.data}');
         final data = response.data['data'];
-        final tabungan = data['tabungan']; // Access the 'tabungan' key
+        final tabungan = data['tabungan'];
         if (tabungan is List) {
           setState(() {
             _historiTransaksi = List<Map<String, dynamic>>.from(tabungan);
@@ -139,12 +139,33 @@ class _TabunganPageState extends State<TabunganPage> {
                       final transaksi = _historiTransaksi[index];
                       final trxType = transaksiTypes[transaksi['trx_id']] ??
                           'Tipe Transaksi Tidak Tersedia';
+                      final trxNominal =
+                          transaksi['trx_nominal'] ?? 'Nominal Tidak Tersedia';
+                      final trxTanggal = transaksi['trx_tanggal'] ??
+                          'Tanggal Transaksi Tidak Tersedia';
+
+                      Color textColor;
+                      if (trxType == 'Saldo Awal' || trxType == 'Simpanan') {
+                        textColor = Colors.green;
+                      } else if (trxType == 'Penarikan') {
+                        textColor = Colors.red;
+                      } else {
+                        textColor = Colors.black;
+                      }
+
                       return ListTile(
-                        title: Text(trxType),
+                        title: Text(
+                          trxType,
+                          style: TextStyle(color: textColor),
+                        ),
                         subtitle: Text(
-                            'Nominal: Rp.${transaksi['trx_nominal'] ?? 'Nominal Tidak Tersedia'}'),
-                        trailing: Text(transaksi['trx_tanggal'] ??
-                            'Tanggal Transaksi Tidak Tersedia'),
+                          'Nominal: Rp.$trxNominal',
+                          style: TextStyle(color: textColor),
+                        ),
+                        trailing: Text(
+                          trxTanggal,
+                          style: TextStyle(color: textColor),
+                        ),
                       );
                     },
                   ),

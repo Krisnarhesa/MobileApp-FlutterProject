@@ -8,9 +8,9 @@ class AddTransaksiPage extends StatefulWidget {
 }
 
 class _AddTransaksiPageState extends State<AddTransaksiPage> {
-  final _storage = GetStorage();
   final _dio = Dio();
   final _apiUrl = 'https://mobileapis.manpits.xyz/api';
+  final _storage = GetStorage();
 
   late dynamic anggota;
   bool firstTransactionCompleted = false;
@@ -23,6 +23,30 @@ class _AddTransaksiPageState extends State<AddTransaksiPage> {
   @override
   void initState() {
     super.initState();
+    _fetchCurrentBalance();
+  }
+
+  Future<void> _fetchCurrentBalance() async {
+    try {
+      final response = await _dio.get(
+        '$_apiUrl/saldo/${anggota['id']}',
+        options: Options(
+          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
+        ),
+      );
+
+      setState(() {
+        currentBalance = response.data['saldo'] ?? 0.0;
+        firstTransactionCompleted = currentBalance > 0;
+      });
+    } catch (e) {
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Gagal mendapatkan saldo anggota'),
+        ),
+      );
+    }
   }
 
   @override
@@ -67,6 +91,7 @@ class _AddTransaksiPageState extends State<AddTransaksiPage> {
                 style: TextStyle(color: Colors.blue.shade400),
               ),
               onPressed: () {
+                Navigator.of(context).pop();
                 goAddTransaksi();
               },
             ),
@@ -81,8 +106,8 @@ class _AddTransaksiPageState extends State<AddTransaksiPage> {
 
   Future<void> goAddTransaksi() async {
     final trxNominal = double.tryParse(_addTransaksiController.text);
-    // Validasi jika input nominal tidak valid
-    if (trxNominal == null || trxNominal <= 0) {
+
+    if (trxNominal == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Nominal transaksi tidak valid'),
@@ -91,51 +116,10 @@ class _AddTransaksiPageState extends State<AddTransaksiPage> {
       return;
     }
 
-    // Validasi saldo awal hanya bisa dilakukan sekali dan saldo awal harus 0 saat pertama kali
-    if (_selectedTransactionType == '1' && currentBalance != 0.0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Saldo awal hanya bisa dilakukan sekali'),
-        ),
-      );
-      return;
-    }
-
-    // Validasi penarikan tidak boleh melebihi saldo
     if (_selectedTransactionType == '3' && trxNominal > currentBalance) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Penarikan tidak boleh melebihi saldo'),
-        ),
-      );
-      return;
-    }
-
-    // Validasi koreksi penambahan tidak boleh negatif
-    if (_selectedTransactionType == '5' && trxNominal < 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Koreksi penambahan tidak boleh negatif'),
-        ),
-      );
-      return;
-    }
-
-    // Validasi koreksi pengurangan tidak boleh negatif
-    if (_selectedTransactionType == '6' && trxNominal < 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Koreksi pengurangan tidak boleh negatif'),
-        ),
-      );
-      return;
-    }
-
-    // Validasi saldo awal harus 0 saat pertama kali
-    if (!firstTransactionCompleted && _selectedTransactionType != '1') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Saldo awal harus dilakukan terlebih dahulu'),
+          content: Text('Transaksi Gagal: Penarikan melebihi saldo'),
         ),
       );
       return;
@@ -154,25 +138,27 @@ class _AddTransaksiPageState extends State<AddTransaksiPage> {
         ),
       );
       print(response.data);
+      if (response.data['sucess'] == false) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Transaksi Gagal: ${response.data['message']}'),
+          ),
+        );
+        return;
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Transaksi Berhasil'),
         ),
       );
 
-      // Setelah saldo awal dilakukan, set firstTransactionCompleted menjadi true
-      if (_selectedTransactionType == '1') {
-        setState(() {
-          firstTransactionCompleted = true;
-        });
-      }
-
       Navigator.pushReplacementNamed(context, '/transaksi');
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       print('Error: ${e.response?.statusCode} - ${e.response?.data}');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Transaksi Gagal: ${e.response?.statusCode}'),
+          content:
+              Text('Transaksi Gagal: ${e.response?.data['message'] ?? ''}'),
         ),
       );
     }
